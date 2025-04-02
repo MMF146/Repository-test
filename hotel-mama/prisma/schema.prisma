@@ -1,0 +1,105 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Reservation {
+  id            Int      @id @default(autoincrement())
+  guestName     String
+  roomNumber    String
+  checkInDate   DateTime
+  checkOutDate  DateTime
+  status        String   @default("checked-in") // "checked-in" | "checked-out"
+  notes         String?
+  totalAmount   Float
+  paymentStatus String   @default("pending") // "pending" | "paid"
+  documentId    String
+  phoneNumber   String?
+  email         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model DatabaseMonitoring {
+  id                Int      @id @default(autoincrement())
+  dbName           String
+  dbType           String
+  host             String
+  port             String
+  username         String
+  password         String
+  monitoringInterval String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  isActive         Boolean  @default(true)
+  lastCheck        DateTime?
+  status           String?
+  errorMessage     String?
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  subject   String
+  message   String
+  status    String   @default("pending") // pending, read, answered
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model FoodOrder {
+  id                 String   @id @default(cuid())
+  guestName          String
+  items              String   // JSON string of items array
+  specialInstructions String  @default("")
+  totalAmount        Float
+  status             String
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model GuestFeedback {
+  id          String   @id @default(cuid())
+  guestName   String
+  roomNumber  String
+  rating      Int      @default(5) // 1-5 stars
+  comment     String
+  category    String   // "general", "food", "cleanliness", "service"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model CheckInOut {
+  id              String   @id @default(cuid())
+  guestName       String
+  roomNumber      String
+  type            String   // "check-in" or "check-out"
+  dateTime        DateTime @default(now())
+  specialRequests String?
+  luggage         Int      @default(0)
+  roomCondition   String?  // for check-out
+  minibarUsage    Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model LocalPreferences {
+  id           String   @id @default(cuid())
+  guestName    String
+  roomNumber   String
+  language     String   @default("es")
+  dietaryNeeds String?
+  temperature  Int      @default(22)
+  wakeUpCall   String?
+  newspaper    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+} 
